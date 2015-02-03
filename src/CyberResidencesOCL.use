@@ -224,7 +224,7 @@ context Tenant
     -- Children are always declared as non smoker.
 	
 context Resident
-	inv childNonSmoking :  self.age < 18 implies not self.isSmoker
+	inv childNonSmoking :  self.age < 18 implies self.isSmoker = false
 
 -------------------------------------------------------------------------------
 --                                 childTutored
@@ -516,7 +516,7 @@ context Resident
     -- bedroom.
 
 context Bathroom
-    inv sameNumberIfPrivate : not self.isOnTheLanding implies self.number = self.bedroom.number
+    inv sameNumberIfPrivate : self.isOnTheLanding = false implies self.number = self.bedroom.number
 
 -------------------------------------------------------------------------------
 --                               sboooConditions
