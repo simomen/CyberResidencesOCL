@@ -168,7 +168,7 @@ constraints
     -- To be registered as married, resident must be adult.
 
 context Resident
-	inv adultMarried :  self.consort -> isEmpty implies self.age >= 18
+	inv adultMarried :  self.consort -> notEmpty implies self.age >= 18
 
 -------------------------------------------------------------------------------
 --                                 adultTenant
@@ -180,7 +180,7 @@ context Resident
     -- The minimal age to rent a bedroom is 18 years old.
 
 context Tenant
-	inv adultTenant :  self.rentedBedrooms->size > 0 implies self.age >= 18
+	inv adultTenant :  self.rentedBedrooms -> size > 0 implies self.age >= 18
 
 -------------------------------------------------------------------------------
 --                             allPrestigeBathrooms
@@ -214,6 +214,8 @@ context Bedroom
 -- context Bedroom inv atLeastOneAdult:
     -- At least one adult must be presented in all occupied rooms.
 
+context Bedroom
+    inv atLeastOneAdult : self.occupants -> notEmpty implies self.occupants -> exists(age >= 18)
 
 -------------------------------------------------------------------------------
 --                               childNonSmoking
