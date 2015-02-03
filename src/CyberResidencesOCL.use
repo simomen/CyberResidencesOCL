@@ -91,13 +91,13 @@ association ContainsRooms between
      Room[*] role rooms
 end
 
-association IsInBedroom between
+association IsOccupiedBy between
      Resident[*] role occupants
      Bedroom[1] role occupiedRoom
 end
 
-association IsOccupiedBy between
-     Resident[0..3] role bathrooms
+association IsInBedroom between
+     Bathroom[0..3] role bathrooms
      Bedroom[0..1] role bedroom
 end
 
@@ -168,7 +168,7 @@ constraints
     -- To be registered as married, resident must be adult.
 
 context Resident
-	inv adultMarried :  self.consort -> isEmpty implies self.age > 18
+	inv adultMarried :  self.consort -> isEmpty implies self.age >= 18
 
 -------------------------------------------------------------------------------
 --                                 adultTenant
@@ -180,7 +180,7 @@ context Resident
     -- The minimal age to rent a bedroom is 18 years old.
 
 context Tenant
-	inv adultTenant :  self.rentedBedrooms->size > 0 implies self.age > 18
+	inv adultTenant :  self.rentedBedrooms->size > 0 implies self.age >= 18
 
 -------------------------------------------------------------------------------
 --                             allPrestigeBathrooms
@@ -513,6 +513,8 @@ context Tenant
     -- private to a bedroom, have the same number of room as this
     -- bedroom.
 
+context Bathroom
+    inv sameNumberIfPrivate : not self.isOnTheLanding implies self.number = self.bedroom.number
 
 -------------------------------------------------------------------------------
 --                               sboooConditions
@@ -559,6 +561,8 @@ context Tenant
 -- context Bedroom inv smokingPrestigePolicy:
     -- There are no smoking rooms at all in residence of prestige.
 
+context Bedroom
+    inv smokingPrestigePolicy : self.residence.category = #prestige implies self.isNonSmoking = true
 
 -------------------------------------------------------------------------------
 --                              tenantInRentedRoom
@@ -580,6 +584,8 @@ context Tenant
     -- A resident can not be the tutor of another resident if he or
     -- she is not an adult.
 
+context Resident
+    inv tutorAdult : self.tutors -> size > 0 implies self.age >= 18
 
 -------------------------------------------------------------------------------
 --                               tutorInSameGroup
