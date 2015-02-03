@@ -202,6 +202,8 @@ context Tenant
 -- context Bedroom inv atLeastABed:
     -- Bedrooms that are not out of order must have at least one bed.
 
+context Bedroom
+    inv atLeastABed : self.isOutOfOrder = false implies self.nbOfSingleBeds > 0 or self.nbOfDoubleBeds > 0
 
 -------------------------------------------------------------------------------
 --                               atLeastOneAdult
