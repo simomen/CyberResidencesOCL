@@ -4,14 +4,12 @@
 
 model CyberResidences
 
-
 enum Category {
     economy,
     standard,
     premium,
     prestige
 }
-
 
 enum Gender {
     male,
@@ -32,10 +30,10 @@ operations
     bedrooms() : Set(Bedroom) =
         rooms->select(oclIsKindOf(Bedroom))->oclAsType(Set(Bedroom))
     -- Set of useful bedrooms.
-    usefulBedrooms() : Set(Bedroom)
+    usefulBedrooms() : Set(Bedroom) =
         bedrooms()->select(not isOutOfOrder)
     -- Set of residence bathrooms
-    bathrooms() : Set(Bathroom)
+    bathrooms() : Set(Bathroom) =
         rooms->select(oclIsKindOf(Bathroom))->oclAsType(Set(Bathroom))
 end
 
@@ -54,6 +52,77 @@ attributes
 end
 
 -- TODO
+
+class Bedroom < Room
+attributes
+	nbOfSingleBeds : Integer
+	nbOfDoubleBeds : Integer
+	rate : Real
+	isNonSmoking : Boolean
+end
+
+class Person
+attributes
+	name : String
+	age : Integer
+	gender : Gender
+end
+
+class Resident < Person
+attributes
+	isSmoker : Boolean
+end
+
+class Tenant < Resident
+attributes
+	paidRate : Real
+end
+
+class Discount
+attributes
+	percentage : Integer
+	label : String
+end
+
+-- Association 
+
+association ContainsRooms between
+     Residence[1] role residence
+     Room[*] role rooms
+end
+
+association IsInBedroom between
+     Resident[*] role occupants
+     Bedroom[1] role occupiedRoom
+end
+
+association IsOccupiedBy between
+     Resident[0..3] role bathrooms
+     Bedroom[0..1] role bedroom
+end
+
+association IsMariedWith between
+     Resident[0..1] role consort
+     Resident[0..1] 
+end
+
+association IsTutoredBy between
+     Resident[0..2] role tutors
+     Resident[*] role tutored
+end
+
+association HasDiscounts between
+     Rent[1] role rent
+     Discount[*] role discounts
+end
+
+associationclass Rent between
+     Bedroom[1..*] role rentedBedrooms
+     Tenant[0..1] role tenant
+ attributes
+     discount : Real
+	 rate : Real
+end
 
 -- For association classes use the following syntax
 -- (see documentation for more details)
@@ -98,6 +167,8 @@ constraints
 -- context Resident inv adultMarried:
     -- To be registered as married, resident must be adult.
 
+context Resident
+	inv adultMarried :  self.consort -> isEmpty implies self.age > 18
 
 -------------------------------------------------------------------------------
 --                                 adultTenant
@@ -108,6 +179,8 @@ constraints
 -- context Tenant inv adultTenant:
     -- The minimal age to rent a bedroom is 18 years old.
 
+context Tenant
+	inv adultTenant :  self.rentedBedrooms->size > 0 implies self.age > 18
 
 -------------------------------------------------------------------------------
 --                             allPrestigeBathrooms
