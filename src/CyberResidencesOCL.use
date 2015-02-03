@@ -222,7 +222,9 @@ context Tenant
 
 -- context Resident inv childNonSmoking:
     -- Children are always declared as non smoker.
-
+	
+context Resident
+	inv childNonSmoking :  self.age < 18 implies not self.isSmoker
 
 -------------------------------------------------------------------------------
 --                                 childTutored
