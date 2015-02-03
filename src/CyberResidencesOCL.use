@@ -562,7 +562,7 @@ context Bathroom
     -- There are no smoking rooms at all in residence of prestige.
 
 context Bedroom
-    inv smokingPrestigePolicy : self.residence.category = #prestige implies self.isNonSmoking = true
+    inv smokingPrestigePolicy : self.residence.category = Category::prestige implies self.isNonSmoking = true
 
 -------------------------------------------------------------------------------
 --                              tenantInRentedRoom
@@ -585,7 +585,7 @@ context Bedroom
     -- she is not an adult.
 
 context Resident
-    inv tutorAdult : self.tutors -> size > 0 implies self.age >= 18
+    inv tutorAdult : self.tutors -> notEmpty implies self.age >= 18
 
 -------------------------------------------------------------------------------
 --                               tutorInSameGroup
