@@ -5,3 +5,6 @@
 
 -- open -q <BASE>.soil
 -- here some mutation code
+
+!create tutor : Resident
+!set tutor.age = 12
