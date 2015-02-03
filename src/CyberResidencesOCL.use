@@ -241,6 +241,8 @@ context Resident
     -- tutor, apart in prestige residences where this rule does not
     -- apply.
 
+context Resident
+    inv childTutored : self.age < 18 and self.occupiedRoom.residence.category <> Category::prestige implies self.tutors -> notEmpty
 
 -------------------------------------------------------------------------------
 --                              cumulatedDiscounts
@@ -297,6 +299,8 @@ context Resident
     -- A bathroom is said to be on the landing if it is not in a
     -- bedroom.
 
+context Bathroom
+    inv deriveIsOnTheLanding : self.bedroom -> isEmpty implies self.isOnTheLanding = true
 
 -------------------------------------------------------------------------------
 --                            deriveMaxNbOfFreeUnits
@@ -355,6 +359,8 @@ context Resident
 -- context Discount inv domainPercentage:
     -- The percentage is a value between 1 and 100.
 
+context Discount
+    inv domainPercentage : self.percentage <= 100 and self.percentage >= 1
 
 -------------------------------------------------------------------------------
 --                          enoughBathroomsInPrestige
@@ -366,6 +372,8 @@ context Resident
     -- In a prestige residence, the number of private bathrooms is at
     -- least the same as the number of beds in each bedroom.
 
+context Bedroom
+    inv enoughBathroomsInPrestige : self.residence.category = Category::prestige implies self.bathrooms -> size >= (self.nbOfSingleBeds + self.nbOfDoubleBeds)
 
 -------------------------------------------------------------------------------
 --                            floorBetweenMinAndMax
@@ -377,6 +385,8 @@ context Resident
     -- The floor of a room is between the minium and maximum floor of
     -- the residence.
 
+context Room
+    inv floorBetweenMinAndMax : self.floor >= self.residence.floorMin and self.floor <= self.residence.floorMax
 
 -------------------------------------------------------------------------------
 --                                  floorOrder
@@ -388,6 +398,8 @@ context Resident
     -- The maximum floor is at higher or at the same level that the
     -- minimum floor of the residence.
 
+context Residence
+    inv floorOrder : self.floorMin < self.floorMax
 
 -------------------------------------------------------------------------------
 --                                 labelUnique
@@ -408,6 +420,8 @@ context Resident
 -- context Resident inv marriageAntiReflexivity:
     -- A resident cannot mary with himself or herself.
 
+context Resident
+    inv marriageAntiReflexivity : self.consort -> notEmpty implies self <> self.consort
 
 -------------------------------------------------------------------------------
 --                             marriageInSameGroup
@@ -430,6 +444,8 @@ context Resident
     -- If a resident is declared to be the consort of another
     -- resident, then the opposite is true as well.
 
+context Resident
+    inv marriageSymmetry : self.consort -> notEmpty implies self.consort.consort = self
 
 -------------------------------------------------------------------------------
 --                              noBedroomOverload
@@ -463,6 +479,8 @@ context Resident
     -- Occupants must be exclusively in rooms that are rented by
     -- somebody.
 
+context Bedroom
+    inv noSquaters : self.tenant -> isEmpty implies self.occupants -> size = 0
 
 -------------------------------------------------------------------------------
 --                               noTutorForAdults
@@ -473,6 +491,8 @@ context Resident
 -- context Resident inv noTutorForAdults:
     -- Adults never have tutor.
 
+context Resident
+    inv noTutorForAdults : self.age >= 18 implies self.tutors -> isEmpty
 
 -------------------------------------------------------------------------------
 --                             oooBedroomsNotRented
@@ -507,6 +527,8 @@ context Resident
     -- For a given tenant, all rented bedrooms are in the same
     -- residence.
 
+context Tenant
+    inv rentInOneResidence : self.rentedBedrooms -> isUnique(residence)
 
 -------------------------------------------------------------------------------
 --                             sameNumberIfPrivate
@@ -557,6 +579,8 @@ context Bathroom
     -- In a premium residence a resident that specified that he or she
     -- is non smoker will never ever be place in a smoking room.
 
+context Bedroom
+    inv smokingPremiumPolicy : self.residence.category = Category::premium and self.isNonSmoking = false implies self.occupants -> forAll(isSmoker = true)
 
 -------------------------------------------------------------------------------
 --                            smokingPrestigePolicy
@@ -579,6 +603,8 @@ context Bedroom
 -- context Tenant inv tenantInRentedRoom:
     -- A tenant occupies one of the bedroom that he or she has rented.
 
+context Tenant
+    inv tenantInRentedRoom : self.rentedBedrooms -> includes(self.occupiedRoom)
 
 -------------------------------------------------------------------------------
 --                                  tutorAdult
@@ -604,6 +630,8 @@ context Resident
     -- resident. In other words they are all in the same group of
     -- rooms.
 
+context Resident
+    inv tutorInSameGroup : self.tutors -> notEmpty implies self.tutors -> forAll(occupiedRoom = self.occupiedRoom)
 
 -------------------------------------------------------------------------------
 --                     uniqueNumberApartForPrivateBathroom
