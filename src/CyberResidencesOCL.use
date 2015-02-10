@@ -13,7 +13,7 @@
 -- ✘ cumulatedDiscounts
 -- ✘ deriveAvgRate
 -- ✘ deriveDiscount
--- ✘ deriveFloor
+-- ✔ deriveFloor
 -- ✔ deriveIsOnTheLanding
 -- ✘ deriveMaxNbOfFreeUnits
 -- ✘ deriveNbOfUnits
@@ -104,7 +104,7 @@ attributes
 	isNonSmoking : Boolean
 end
 
-class Person
+abstract class Person
 attributes
 	name : String
 	age : Integer
@@ -331,6 +331,8 @@ context Resident
     -- number, where the last two digits are removed. For instance the
     -- room 634 is at the floor 6.
 
+context Room
+    inv deriveFloor : (self.number / 100).floor() = self.floor
 
 -------------------------------------------------------------------------------
 --                             deriveIsOnTheLanding
