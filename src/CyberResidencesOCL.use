@@ -1,6 +1,49 @@
 -------------------------------------------------------------------------------
 --                           CyberResidencesOCL.use
 -------------------------------------------------------------------------------
+-- ✘ aboooConditions
+-- ✘ aboooPercentage
+-- ✔ adultMarried
+-- ✔ adultTenant
+-- ✘ allPrestigeBathrooms
+-- ✔ atLeastABed
+-- ✔ atLeastOneAdult
+-- ✔ childNonSmoking
+-- ✔ childTutored
+-- ✘ cumulatedDiscounts
+-- ✘ deriveAvgRate
+-- ✘ deriveDiscount
+-- ✘ deriveFloor
+-- ✔ deriveIsOnTheLanding
+-- ✘ deriveMaxNbOfFreeUnits
+-- ✘ deriveNbOfUnits
+-- ✘ derivePaidRate
+-- ✘ deriveRate
+-- ✔ domainPercentage
+-- ✔ enoughBathroomsInPrestige
+-- ✔ floorBetweenMinAndMax
+-- ✔ floorOrder
+-- ✘ labelUnique
+-- ✔ marriageAntiReflexivity
+-- ✘ marriageInSameGroup
+-- ✔ marriageSymmetry
+-- ✘ noBedroomOverload
+-- ✘ noEmptyRentedBedrooms
+-- ✔ noSquaters
+-- ✔ noTutorForAdults
+-- ✘ oooBedroomsNotRented
+-- ✘ oooIfPrestige
+-- ✔ rentInOneResidence
+-- ✔ sameNumberIfPrivate
+-- ✘ sboooConditions
+-- ✘ sboooPercentage
+-- ✔ smokingPremiumPolicy
+-- ✔ smokingPrestigePolicy
+-- ✔ tenantInRentedRoom
+-- ✔ tutorAdult
+-- ✔ tutorInSameGroup
+-- ✘ uniqueNumberApartForPrivateBathroom
+-- 
 
 model CyberResidences
 
