@@ -42,8 +42,8 @@
   </node>
   <node type="Class">
     <name>Residence</name>
-    <x_coord>3.0</x_coord>
-    <y_coord>74.0</y_coord>
+    <x_coord>632.0</x_coord>
+    <y_coord>161.0</y_coord>
     <hidden>false</hidden>
   </node>
   <node type="Class">
@@ -60,8 +60,8 @@
   </node>
   <node type="Class">
     <name>Rent</name>
-    <x_coord>31.0</x_coord>
-    <y_coord>23.0</y_coord>
+    <x_coord>364.0</x_coord>
+    <y_coord>25.0</y_coord>
     <hidden>false</hidden>
   </node>
   <node type="Enumeration">
@@ -82,46 +82,46 @@
     <name>ContainsRooms</name>
     <edgeproperty type="associationName" userDefined="false">
       <name>ContainsRooms</name>
-      <x_coord>133.734375</x_coord>
-      <y_coord>137.84375</y_coord>
+      <x_coord>442.234375</x_coord>
+      <y_coord>181.84375</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="target" type="rolename" userDefined="false">
       <name>rooms</name>
-      <x_coord>254.640625</x_coord>
-      <y_coord>192.0</y_coord>
+      <x_coord>332.0</x_coord>
+      <y_coord>198.0</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="target" type="multiplicity" userDefined="false">
       <name>*</name>
-      <x_coord>295.0</x_coord>
-      <y_coord>191.5</y_coord>
+      <x_coord>316.453125</x_coord>
+      <y_coord>197.5</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="source" type="rolename" userDefined="false">
       <name>residence</name>
-      <x_coord>50.0</x_coord>
-      <y_coord>113.0</y_coord>
+      <x_coord>571.0625</x_coord>
+      <y_coord>195.0</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="source" type="multiplicity" userDefined="false">
       <name>1</name>
-      <x_coord>35.109375</x_coord>
-      <y_coord>113.5</y_coord>
+      <x_coord>630.0</x_coord>
+      <y_coord>195.5</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty type="WayPoint" userDefined="false">
       <name>0</name>
-      <x_coord>48.0</x_coord>
-      <y_coord>89.0</y_coord>
+      <x_coord>628.0</x_coord>
+      <y_coord>171.0</y_coord>
       <hidden>false</hidden>
       <id>0</id>
       <specialid>1</specialid>
     </edgeproperty>
     <edgeproperty type="WayPoint" userDefined="false">
       <name>1</name>
-      <x_coord>293.0</x_coord>
-      <y_coord>211.0</y_coord>
+      <x_coord>330.0</x_coord>
+      <y_coord>217.0</y_coord>
       <hidden>false</hidden>
       <id>1</id>
       <specialid>2</specialid>
@@ -134,37 +134,37 @@
     <name>IsOccupiedBy</name>
     <edgeproperty type="associationName" userDefined="false">
       <name>IsOccupiedBy</name>
-      <x_coord>45.8125</x_coord>
+      <x_coord>52.8125</x_coord>
       <y_coord>47.171875</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="target" type="rolename" userDefined="false">
-      <name>bedroom</name>
-      <x_coord>32.265625</x_coord>
+      <name>occupiedRoom</name>
+      <x_coord>9.90625</x_coord>
       <y_coord>68.0</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="target" type="multiplicity" userDefined="false">
-      <name>0..1</name>
-      <x_coord>86.0</x_coord>
+      <name>1</name>
+      <x_coord>93.0</x_coord>
       <y_coord>67.5</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="source" type="rolename" userDefined="false">
-      <name>bathrooms</name>
-      <x_coord>75.0</x_coord>
+      <name>occupants</name>
+      <x_coord>82.0</x_coord>
       <y_coord>60.0</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="source" type="multiplicity" userDefined="false">
-      <name>0..3</name>
-      <x_coord>45.828125</x_coord>
+      <name>*</name>
+      <x_coord>66.453125</x_coord>
       <y_coord>60.5</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty type="WayPoint" userDefined="false">
       <name>0</name>
-      <x_coord>73.0</x_coord>
+      <x_coord>80.0</x_coord>
       <y_coord>36.0</y_coord>
       <hidden>false</hidden>
       <id>0</id>
@@ -172,7 +172,7 @@
     </edgeproperty>
     <edgeproperty type="WayPoint" userDefined="false">
       <name>1</name>
-      <x_coord>84.0</x_coord>
+      <x_coord>91.0</x_coord>
       <y_coord>87.0</y_coord>
       <hidden>false</hidden>
       <id>1</id>
@@ -257,50 +257,50 @@
     <hidden>false</hidden>
   </edge>
   <edge type="BinaryEdge">
-    <source>Resident</source>
+    <source>Bathroom</source>
     <target>Bedroom</target>
     <name>IsInBedroom</name>
     <edgeproperty type="associationName" userDefined="false">
       <name>IsInBedroom</name>
-      <x_coord>64.2890625</x_coord>
-      <y_coord>49.5</y_coord>
+      <x_coord>63.7890625</x_coord>
+      <y_coord>53.5</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="target" type="rolename" userDefined="false">
-      <name>occupiedRoom</name>
-      <x_coord>17.90625</x_coord>
+      <name>bedroom</name>
+      <x_coord>95.0</x_coord>
       <y_coord>68.0</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="target" type="multiplicity" userDefined="false">
-      <name>1</name>
-      <x_coord>101.0</x_coord>
+      <name>0..1</name>
+      <x_coord>95.0</x_coord>
       <y_coord>67.5</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="source" type="rolename" userDefined="false">
-      <name>occupants</name>
-      <x_coord>28.28125</x_coord>
-      <y_coord>60.0</y_coord>
+      <name>bathrooms</name>
+      <x_coord>95.0</x_coord>
+      <y_coord>68.0</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="source" type="multiplicity" userDefined="false">
-      <name>*</name>
-      <x_coord>90.0</x_coord>
-      <y_coord>60.5</y_coord>
+      <name>0..3</name>
+      <x_coord>65.828125</x_coord>
+      <y_coord>68.5</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty type="WayPoint" userDefined="false">
       <name>0</name>
-      <x_coord>88.0</x_coord>
-      <y_coord>36.0</y_coord>
+      <x_coord>93.0</x_coord>
+      <y_coord>44.0</y_coord>
       <hidden>false</hidden>
       <id>0</id>
       <specialid>1</specialid>
     </edgeproperty>
     <edgeproperty type="WayPoint" userDefined="false">
       <name>1</name>
-      <x_coord>99.0</x_coord>
+      <x_coord>93.0</x_coord>
       <y_coord>87.0</y_coord>
       <hidden>false</hidden>
       <id>1</id>
@@ -390,46 +390,46 @@
     <name>HasDiscounts</name>
     <edgeproperty type="associationName" userDefined="false">
       <name>HasDiscounts</name>
-      <x_coord>41.0</x_coord>
-      <y_coord>52.0</y_coord>
+      <x_coord>176.3984375</x_coord>
+      <y_coord>36.0</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="target" type="rolename" userDefined="false">
       <name>discounts</name>
-      <x_coord>36.0</x_coord>
-      <y_coord>46.0</y_coord>
+      <x_coord>60.0</x_coord>
+      <y_coord>45.0</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="target" type="multiplicity" userDefined="false">
       <name>*</name>
-      <x_coord>32.0</x_coord>
-      <y_coord>46.0</y_coord>
+      <x_coord>44.453125</x_coord>
+      <y_coord>44.5</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="source" type="rolename" userDefined="false">
       <name>rent</name>
-      <x_coord>38.0</x_coord>
-      <y_coord>55.0</y_coord>
+      <x_coord>331.75</x_coord>
+      <y_coord>56.0</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="source" type="multiplicity" userDefined="false">
       <name>1</name>
-      <x_coord>42.0</x_coord>
-      <y_coord>55.0</y_coord>
+      <x_coord>362.0</x_coord>
+      <y_coord>56.5</y_coord>
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty type="WayPoint" userDefined="false">
       <name>0</name>
-      <x_coord>40.0</x_coord>
-      <y_coord>38.0</y_coord>
+      <x_coord>360.0</x_coord>
+      <y_coord>32.0</y_coord>
       <hidden>false</hidden>
       <id>0</id>
       <specialid>1</specialid>
     </edgeproperty>
     <edgeproperty type="WayPoint" userDefined="false">
       <name>1</name>
-      <x_coord>34.0</x_coord>
-      <y_coord>58.0</y_coord>
+      <x_coord>58.0</x_coord>
+      <y_coord>64.0</y_coord>
       <hidden>false</hidden>
       <id>1</id>
       <specialid>2</specialid>
@@ -459,7 +459,7 @@
       <hidden>false</hidden>
     </edgeproperty>
     <edgeproperty kind="source" type="rolename" userDefined="false">
-      <name>rentBedrooms</name>
+      <name>rentedBedrooms</name>
       <x_coord>72.0</x_coord>
       <y_coord>104.0</y_coord>
       <hidden>false</hidden>
