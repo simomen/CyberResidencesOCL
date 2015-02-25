@@ -1,49 +1,49 @@
 -------------------------------------------------------------------------------
 --                           CyberResidencesOCL.use
 -------------------------------------------------------------------------------
--- ✘ aboooConditions
--- ✘ aboooPercentage
+-- ✔ aboooConditions
+-- ✔ aboooPercentage
 -- ✔ adultMarried
 -- ✔ adultTenant
--- ✘ allPrestigeBathrooms
+-- ✔ allPrestigeBathrooms
 -- ✔ atLeastABed
 -- ✔ atLeastOneAdult
 -- ✔ childNonSmoking
 -- ✔ childTutored
--- ✘ cumulatedDiscounts
+-- ✔ cumulatedDiscounts
 -- ✘ deriveAvgRate
--- ✘ deriveDiscount
+-- ✔ deriveDiscount
 -- ✔ deriveFloor
 -- ✔ deriveIsOnTheLanding
 -- ✘ deriveMaxNbOfFreeUnits
--- ✘ deriveNbOfUnits
+-- ✔ deriveNbOfUnits
 -- ✘ derivePaidRate
--- ✘ deriveRate
+-- ✔ deriveRate
 -- ✔ domainPercentage
 -- ✔ enoughBathroomsInPrestige
 -- ✔ floorBetweenMinAndMax
 -- ✔ floorOrder
--- ✘ labelUnique
+-- ✔ labelUnique
 -- ✔ marriageAntiReflexivity
--- ✘ marriageInSameGroup
+-- ✔ marriageInSameGroup
 -- ✔ marriageSymmetry
--- ✘ noBedroomOverload
--- ✘ noEmptyRentedBedrooms
+-- ✔ noBedroomOverload
+-- ✔ noEmptyRentedBedrooms
 -- ✔ noSquaters
 -- ✔ noTutorForAdults
--- ✘ oooBedroomsNotRented
--- ✘ oooIfPrestige
+-- ✔ oooBedroomsNotRented
+-- ✔ oooIfPrestige
 -- ✔ rentInOneResidence
 -- ✔ sameNumberIfPrivate
--- ✘ sboooConditions
--- ✘ sboooPercentage
+-- ✔ sboooConditions
+-- ✔ sboooPercentage
 -- ✔ smokingPremiumPolicy
 -- ✔ smokingPrestigePolicy
 -- ✔ tenantInRentedRoom
 -- ✔ tutorAdult
--- ✔ tutorInSameGroup
+-- ✘ tutorInSameGroup
 -- ✘ uniqueNumberApartForPrivateBathroom
--- 
+-------------------------------------------------------------------------------
 
 model CyberResidences
 
@@ -59,15 +59,14 @@ enum Gender {
     female
 }
 
-
 class Residence
 attributes
-    name     : String
     floorMin : Integer
     floorMax : Integer
     category : Category
     maxNbOfFreeUnits : Integer -- @derived
     avgRate : Real             -- @derived
+    name     : String
 operations
     -- Set of bedrooms of the residence.
     bedrooms() : Set(Bedroom) =
@@ -80,21 +79,17 @@ operations
         rooms->select(oclIsKindOf(Bathroom))->oclAsType(Set(Bathroom))
 end
 
-
 class Room
 attributes
-    number : Integer
     floor : Integer -- @derived
     isOutOfOrder : Boolean
+    number : Integer
 end
-
 
 class Bathroom < Room
 attributes
-    isOnTheLanding : Boolean
+    isOnTheLanding : Boolean -- @derived
 end
-
--- TODO
 
 class Bedroom < Room
 attributes
@@ -102,7 +97,7 @@ attributes
 	nbOfDoubleBeds : Integer
 	rate : Real
 	isNonSmoking : Boolean
-	nbOfUnits : Integer
+	nbOfUnits : Integer -- @derived
 end
 
 abstract class Person
@@ -119,7 +114,7 @@ end
 
 class Tenant < Resident
 attributes
-	paidRate : Real
+	paidRate : Real -- @derived
 end
 
 class Discount
@@ -145,7 +140,7 @@ association IsInBedroom between
      Bedroom[0..1] role bedroom
 end
 
-association IsMariedWith between
+association IsMarriedWith between
      Resident[0..1] role consort
      Resident[0..1] 
 end
@@ -164,19 +159,9 @@ associationclass Rent between
      Bedroom[1..*] role rentedBedrooms
      Tenant[0..1] role tenant
  attributes
-     discount : Real
-	 rate : Real
+     discount : Real -- @derived
+	 rate : Real -- @derived
 end
-
--- For association classes use the following syntax
--- (see documentation for more details)
--- associationclass ... between
---     ...[...] role ...
---     ...[...] role ...
--- attributes
---     ...
--- end
-
 
 constraints
 
@@ -190,7 +175,10 @@ constraints
     -- A discount is given for bedrooms that have all bathrooms out of
     -- order. The label of this type of discount is 'BROOO50'. This
     -- rule does not apply in economy residences.
-
+context Rent
+    inv aboooConditions : self.rentedBedrooms.residence.category <> Category::economy and 
+                          self.rentedBedrooms.bathrooms -> select(isOutOfOrder) -> size = self.rentedBedrooms.bathrooms -> size
+                          implies self.discounts.one(label = 'BROOO50')
 
 -------------------------------------------------------------------------------
 --                               aboooPercentage
@@ -201,6 +189,8 @@ constraints
 -- context Discount inv aboooPercentage:
     -- ABOO discounts are equal to 50%.
 
+context Discount
+    inv aboooPercentage : self.label = 'BROOO50' implies self.percentage = 50
 
 -------------------------------------------------------------------------------
 --                                 adultMarried
@@ -212,7 +202,7 @@ constraints
     -- To be registered as married, resident must be adult.
 
 context Resident
-	inv adultMarried :  self.consort -> notEmpty implies self.age >= 18
+	inv adultMarried : self.consort -> notEmpty implies self.age >= 18
 
 -------------------------------------------------------------------------------
 --                                 adultTenant
@@ -236,6 +226,8 @@ context Tenant
     -- Residences of category prestige have in each bedroom at least
     -- the same number of bathroom that the number of beds.
 
+context Residence
+    inv allPrestigeBathrooms : self.category = Category::prestige implies self.bedrooms() -> forAll( br | br.bathrooms -> size >= (br.nbOfSingleBeds + br.nbOfDoubleBeds))
 
 -------------------------------------------------------------------------------
 --                                 atLeastABed
@@ -247,7 +239,7 @@ context Tenant
     -- Bedrooms that are not out of order must have at least one bed.
 
 context Bedroom
-    inv atLeastABed : self.isOutOfOrder = false implies self.nbOfSingleBeds > 0 or self.nbOfDoubleBeds > 0
+    inv atLeastABed : not self.isOutOfOrder implies self.nbOfSingleBeds > 0 or self.nbOfDoubleBeds > 0
 
 -------------------------------------------------------------------------------
 --                               atLeastOneAdult
@@ -272,7 +264,7 @@ context Bedroom
     -- Children are always declared as non smoker.
 	
 context Resident
-	inv childNonSmoking :  self.age < 18 implies self.isSmoker = false
+	inv childNonSmoking :  self.age < 18 implies not self.isSmoker
 
 -------------------------------------------------------------------------------
 --                                 childTutored
@@ -297,6 +289,8 @@ context Resident
 -- context Rent inv cumulatedDiscounts:
     -- No room will have more that 70% of dicounts cumulated.
 
+context Rent
+    inv cumulatedDiscounts : self.discounts -> collect(percentage) -> sum <= 70
 
 -------------------------------------------------------------------------------
 --                                deriveAvgRate
@@ -320,6 +314,8 @@ context Resident
     -- The discount for a rent, is the rate of the bedroom multiplied
     -- by the sum of percentages of all discounts.
 
+context Rent
+    inv deriveDiscount : self.discount = self.rentedBedrooms.rate * self.discounts->collect(percentage) -> sum
 
 -------------------------------------------------------------------------------
 --                                 deriveFloor
@@ -346,7 +342,7 @@ context Room
     -- bedroom.
 
 context Bathroom
-    inv deriveIsOnTheLanding : self.bedroom -> isEmpty implies self.isOnTheLanding = true
+    inv deriveIsOnTheLanding : self.bedroom -> isEmpty implies self.isOnTheLanding
 
 -------------------------------------------------------------------------------
 --                            deriveMaxNbOfFreeUnits
@@ -369,7 +365,8 @@ context Bathroom
     -- The number of units of a bedroom is the maximum number of
     -- people that can fit within the bedroom assuming that all places
     -- in all beds are full.
-
+context Bedroom
+    inv deriveNbOfUnits : self.nbOfUnits = self.nbOfSingleBeds + (self.nbOfDoubleBeds * 2)
 
 -------------------------------------------------------------------------------
 --                                derivePaidRate
@@ -395,6 +392,8 @@ context Bathroom
     -- The rate of a rent corresponds to the regular rate for the room
     -- minus the discount.
 
+context Rent
+    inv deriveRate : self.rate = self.rentedBedrooms.rate - self.discount
 
 -------------------------------------------------------------------------------
 --                               domainPercentage
@@ -445,7 +444,7 @@ context Room
     -- minimum floor of the residence.
 
 context Residence
-    inv floorOrder : self.floorMin < self.floorMax
+    inv floorOrder : self.floorMin <= self.floorMax
 
 -------------------------------------------------------------------------------
 --                                 labelUnique
@@ -456,6 +455,8 @@ context Residence
 -- context Rent inv labelUnique:
     -- All discounts associated to a rent have distinct labels.
 
+context Rent
+    inv labelUnique : self.discounts -> isUnique(label)
 
 -------------------------------------------------------------------------------
 --                           marriageAntiReflexivity
@@ -479,6 +480,8 @@ context Resident
     -- A resident and his or her consort occupies a room of the same
     -- group.
 
+context Resident
+    inv marriageInSameGroup : self.consort -> notEmpty implies self.occupiedRoom.tenant.rentedBedrooms.occupants -> exists(o | o = self.consort)
 
 -------------------------------------------------------------------------------
 --                               marriageSymmetry
@@ -504,6 +507,8 @@ context Resident
     -- units of this bedroom. Children up to 3 years old are not
     -- counted in this rule.
 
+context Bedroom
+    inv noBedroomOverload : self.occupants -> select(age > 3) -> size <= self.nbOfUnits
 
 -------------------------------------------------------------------------------
 --                            noEmptyRentedBedrooms
@@ -514,6 +519,8 @@ context Resident
 -- context Bedroom inv noEmptyRentedBedrooms:
     -- All rented bedrooms are occupied by at least one occupant.
 
+context Bedroom
+    inv noEmptyRentedBedrooms : self.tenant -> notEmpty implies self.occupants -> notEmpty
 
 -------------------------------------------------------------------------------
 --                                  noSquaters
@@ -526,7 +533,7 @@ context Resident
     -- somebody.
 
 context Bedroom
-    inv noSquaters : self.tenant -> isEmpty implies self.occupants -> size = 0
+    inv noSquaters : self.tenant -> isEmpty implies self.occupants -> isEmpty
 
 -------------------------------------------------------------------------------
 --                               noTutorForAdults
@@ -549,6 +556,8 @@ context Resident
 -- context Bedroom inv oooBedroomsNotRented:
     -- Bedrooms that are out of order cannot be rented.
 
+context Bedroom
+    inv oooBedroomsNotRented : self.isOutOfOrder implies self.tenant -> isEmpty
 
 -------------------------------------------------------------------------------
 --                                oooIfPrestige
@@ -561,7 +570,9 @@ context Resident
     -- with bathrooms that are out of order. So if a bathrom is marked
     -- as out of order, the corresponding bedroom is also marked as
     -- out of order.
-
+    
+context Bathroom
+    inv oooIfPrestige : self.residence.category = Category::prestige and self.isOutOfOrder implies self.bedroom.isOutOfOrder
 
 -------------------------------------------------------------------------------
 --                              rentInOneResidence
@@ -588,7 +599,7 @@ context Tenant
     -- bedroom.
 
 context Bathroom
-    inv sameNumberIfPrivate : self.isOnTheLanding = false implies self.number = self.bedroom.number
+    inv sameNumberIfPrivate : not self.isOnTheLanding implies self.number = self.bedroom.number
 
 -------------------------------------------------------------------------------
 --                               sboooConditions
@@ -603,6 +614,10 @@ context Bathroom
     -- label for this type of discount is SBOO. This type of discount
     -- does not apply on economy residences.
 
+context Rent
+    inv sboooConditions : self.rentedBedrooms.bathrooms.select(isOutOfOrder) -> size < self.rentedBedrooms.bathrooms -> size
+                          and self.rentedBedrooms.bathrooms.select(isOutOfOrder) -> notEmpty
+                          implies self.discounts.one(label = 'SBOO')
 
 -------------------------------------------------------------------------------
 --                               sboooPercentage
@@ -614,6 +629,9 @@ context Bathroom
     -- In premium residences, SBOO discounts are equal to 25%. For
     -- standard category the discount is of 10%.
 
+context Discount
+    inv sboooPercentage : self.label = 'SBOOO' and self.rent.rentedBedrooms.residence.category = Category::premium implies self.percentage = 25
+                          or self.label = 'SBOOO' and self.rent.rentedBedrooms.residence.category = Category::standard implies self.percentage = 10
 
 -------------------------------------------------------------------------------
 --                             smokingPremiumPolicy
@@ -676,8 +694,8 @@ context Resident
     -- resident. In other words they are all in the same group of
     -- rooms.
 
-context Resident
-    inv tutorInSameGroup : self.tutors -> notEmpty implies self.tutors -> forAll(occupiedRoom = self.occupiedRoom)
+--context Resident
+--    inv tutorInSameGroup : self.tutors -> notEmpty implies self.tutors -> forAll(occupiedRoom = self.occupiedRoom)
 
 -------------------------------------------------------------------------------
 --                     uniqueNumberApartForPrivateBathroom
