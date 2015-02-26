@@ -123,7 +123,7 @@ attributes
 	label : String
 end
 
--- Association 
+-- Association
 
 association ContainsRooms between
      Residence[1] role residence
@@ -142,7 +142,7 @@ end
 
 association IsMarriedWith between
      Resident[0..1] role consort
-     Resident[0..1] 
+     Resident[0..1]
 end
 
 association IsTutoredBy between
@@ -176,7 +176,7 @@ constraints
     -- order. The label of this type of discount is 'BROOO50'. This
     -- rule does not apply in economy residences.
 context Rent
-    inv aboooConditions : self.rentedBedrooms.residence.category <> Category::economy and 
+    inv aboooConditions : self.rentedBedrooms.residence.category <> Category::economy and
                           self.rentedBedrooms.bathrooms -> select(isOutOfOrder) -> size = self.rentedBedrooms.bathrooms -> size
                           implies self.discounts.one(label = 'BROOO50')
 
@@ -214,7 +214,7 @@ context Resident
     -- The minimal age to rent a bedroom is 18 years old.
 
 context Tenant
-	inv adultTenant :  self.rentedBedrooms -> size > 0 implies self.age >= 18
+	inv adultTenant : self.age >= 18
 
 -------------------------------------------------------------------------------
 --                             allPrestigeBathrooms
@@ -262,7 +262,7 @@ context Bedroom
 
 -- context Resident inv childNonSmoking:
     -- Children are always declared as non smoker.
-	
+
 context Resident
 	inv childNonSmoking :  self.age < 18 implies not self.isSmoker
 
@@ -562,7 +562,7 @@ context Bedroom
 -------------------------------------------------------------------------------
 --                                oooIfPrestige
 -------------------------------------------------------------------------------
--- Out of order bathroom implications if prestige. 
+-- Out of order bathroom implications if prestige.
 -- Medium. Use 'implies'
 
 -- context Bathroom inv oooIfPrestige:
@@ -570,7 +570,7 @@ context Bedroom
     -- with bathrooms that are out of order. So if a bathrom is marked
     -- as out of order, the corresponding bedroom is also marked as
     -- out of order.
-    
+
 context Bathroom
     inv oooIfPrestige : self.residence.category = Category::prestige and self.isOutOfOrder implies self.bedroom.isOutOfOrder
 
@@ -615,9 +615,10 @@ context Bathroom
     -- does not apply on economy residences.
 
 context Rent
-    inv sboooConditions : self.rentedBedrooms.bathrooms.select(isOutOfOrder) -> size < self.rentedBedrooms.bathrooms -> size
+    inv sboooConditions : self.rentedBedrooms.residence.category <> Category::economy
+                          and self.rentedBedrooms.bathrooms.select(isOutOfOrder) -> size < self.rentedBedrooms.bathrooms -> size
                           and self.rentedBedrooms.bathrooms.select(isOutOfOrder) -> notEmpty
-                          implies self.discounts.one(label = 'SBOO')
+                          implies self.discounts.one(label = 'SBOOO')
 
 -------------------------------------------------------------------------------
 --                               sboooPercentage
@@ -630,8 +631,18 @@ context Rent
     -- standard category the discount is of 10%.
 
 context Discount
-    inv sboooPercentage : self.label = 'SBOOO' and self.rent.rentedBedrooms.residence.category = Category::premium implies self.percentage = 25
-                          or self.label = 'SBOOO' and self.rent.rentedBedrooms.residence.category = Category::standard implies self.percentage = 10
+    inv sboooPercentage : if self.label = 'SBOOO' and self.rent.rentedBedrooms.residence.category = Category::premium then
+                            self.percentage = 25
+                          else
+                            if self.label = 'SBOOO' and self.rent.rentedBedrooms.residence.category = Category::standard then
+                              self.percentage = 10
+                            else
+                              true
+                            endif
+                          endif
+
+    --self.label = 'SBOOO' and self.rent.rentedBedrooms.residence.category = Category::premium implies self.percentage = 25
+    --                      and self.label = 'SBOOO' and self.rent.rentedBedrooms.residence.category = Category::standard implies self.percentage = 10
 
 -------------------------------------------------------------------------------
 --                             smokingPremiumPolicy
@@ -662,7 +673,7 @@ context Bedroom
 --                              tenantInRentedRoom
 -------------------------------------------------------------------------------
 -- Room occupied by the tenant.
--- Medium. 
+-- Medium.
 
 -- context Tenant inv tenantInRentedRoom:
     -- A tenant occupies one of the bedroom that he or she has rented.
@@ -705,4 +716,3 @@ context Resident
 
 -- context Residence inv uniqueNumberApartForPrivateBathroom:
     -- All rooms have a distinct number, except private bathrooms.
-
