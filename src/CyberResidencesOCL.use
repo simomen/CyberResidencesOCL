@@ -692,7 +692,7 @@ context Tenant
     -- she is not an adult.
 
 context Resident
-    inv tutorAdult : self.tutors -> notEmpty implies self.age >= 18
+    inv tutorAdult : self.tutored -> notEmpty implies self.age >= 18
 
 -------------------------------------------------------------------------------
 --                               tutorInSameGroup

@@ -261,8 +261,8 @@ reset
 ! insert (G235_loulou,G235_nafnaf) into IsMarriedWith
 ! insert (G235_tata,G235_toto) into IsMarriedWith
 ! insert (G235_toto,G235_tata) into IsMarriedWith
-! insert (G235_paul,G235_riri) into IsTutoredBy
+! insert (G235_jacques,G235_riri) into IsTutoredBy
 ! insert (G235_pierre,G235_fifi) into IsTutoredBy
-! insert (G235_pierre,G235_nifnif) into IsTutoredBy
+! insert (G235_noufnouf,G235_nifnif) into IsTutoredBy
 
 check
